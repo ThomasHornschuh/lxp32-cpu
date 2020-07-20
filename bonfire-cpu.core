@@ -58,25 +58,25 @@ parameters:
     datatype: str
     default: 'false'
     description: Branch Predictor enable/disable
-    paramtype: generic
+    paramtype: vlogparam
     scope: private
   TestFile:
     datatype: file
     default: ../compiled_code/dhrystone_bram.hex
     description: Initial boot RAM contents (in hex)
-    paramtype: generic
+    paramtype: vlogparam
     scope: private
   USE_ICACHE:
     datatype: str
     default: 'false'
     description: Simulate an instruction cache
-    paramtype: generic
+    paramtype: vlogparam
     scope: private
   signature_file:
     datatype: file
     default: '"signature.log"'
     description: Filename for RISC-V compliance test signature
-    paramtype: generic
+    paramtype: vlogparam
     scope: private
 targets:
   default:
@@ -94,6 +94,12 @@ targets:
     - BRANCH_PREDICTOR
     - USE_ICACHE
     toplevel: tb_cpu_core
+    tools:
+      ghdl:
+        analyze_options: [--ieee=synopsys ]
+        run_options: [ --ieee-asserts=disable, --max-stack-alloc=0 ] #,  --wave=soc.ghw,--stop-time=500000ns ]
+      xsim:
+        xelab_options: [ "--debug typical" ]
   synth:
     filesets:
     - rtl
