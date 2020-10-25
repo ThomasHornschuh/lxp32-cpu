@@ -92,7 +92,6 @@ signal csr_grp4 : STD_LOGIC_VECTOR (31 downto 0);
 signal csr_grpb : STD_LOGIC_VECTOR (31 downto 0);
 signal csr_grpf : STD_LOGIC_VECTOR (31 downto 0);
 
-signal busy : std_logic := '0';
 signal we : std_logic :='0';
 signal exception : std_logic :='0';
 

@@ -170,7 +170,6 @@ signal csr_tret_exec : std_logic;
 
 --Constrol Unit Export signal
 signal mepc,mtvec :  std_logic_vector(31 downto 2);
-signal mie : std_logic;
 
 -- Registers for storing data address and direction, needed for recording misalignment traps
 signal adr_reg : std_logic_vector(31 downto 0);

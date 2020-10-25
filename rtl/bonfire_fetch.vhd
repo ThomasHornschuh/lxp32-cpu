@@ -63,10 +63,6 @@ signal suppress_re: std_logic:='0';
 signal re: std_logic;
 signal requested: std_logic:='0';
 
-
-
---signal data_valid_r : std_logic :='0';
-
 signal fifo_rst: std_logic;
 signal fifo_we: std_logic;
 signal fifo_din: std_logic_vector(62 downto 0);
@@ -200,27 +196,26 @@ begin
       branch_target_fetched <= '0';
     else
       init<='1';
+   
 
-      if lli_busy_i='0' then
-        current_addr <= fetch_addr;
-        requested<=re and not fetch_branch_target;
-      end if;
-
-       if re='1' then
+      if re='1' then
          branch_target_fetched <= '0';
-       end if;
-       if init = '1' then
-         if  jump_valid_i='0' and fetch_branch_target='1' then
-            fetch_addr <= branch_target;
-            branch_target_fetched <= '1';
-         elsif jump_valid_i='1' and jstate=jnone then --misprecdict
-            --report "Branch mispredict" severity note;
-            fetch_addr <= jump_dst_i;
-         elsif next_word = '1' then --and branch_target_fetched='0'
-            fetch_addr  <= std_logic_vector(unsigned(fetch_addr)+1);
-         end if;
-       end if;
-
+      end if;
+      if init = '1' then
+           if lli_busy_i='0'  then
+              current_addr <= fetch_addr;
+              requested<=re and not fetch_branch_target;
+           end if;
+           if  jump_valid_i='0' and fetch_branch_target='1' then
+              fetch_addr <= branch_target;
+              branch_target_fetched <= '1';
+           elsif jump_valid_i='1' and jstate=jnone then --misprecdict
+              --report "Branch mispredict" severity note;
+              fetch_addr <= jump_dst_i;
+           elsif next_word = '1' then --and branch_target_fetched='0'
+              fetch_addr  <= std_logic_vector(unsigned(fetch_addr)+1);
+           end if;
+      end if;
     end if;
   end if;
 end process;
@@ -228,7 +223,7 @@ end process;
 next_word<=(fifo_empty or ready_i) and not (lli_busy_i or suppress_re);
 
 
-re<=(fifo_empty or ready_i) and not ( predict_fail or suppress_re);
+re<=(fifo_empty or ready_i) and not ( predict_fail or suppress_re or not init);
 lli_re_o<=re;
 lli_adr_o<=fetch_addr;
 

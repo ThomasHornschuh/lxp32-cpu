@@ -151,7 +151,7 @@ end;
 function fill_in(x: std_logic_vector; len:natural) return std_logic_vector is
 variable temp : std_logic_vector(len-1 downto 0) := (others=>'0');
 begin
-  temp(x'range) := x;
+  temp(x'high downto x'low) := x;
   -- sign extend x into temp
   for i in temp'high downto x'high+1 loop
     temp(i) := x(x'high);

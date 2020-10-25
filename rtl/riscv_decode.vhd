@@ -164,7 +164,7 @@ signal debug_pc : unsigned(31 downto 0);
 
 signal displacement_out : std_logic_vector(displacement_o'range);
 
-signal optype : t_riscv_op;
+signal optype, debug_optype : t_riscv_op;
 
 begin
 
@@ -189,7 +189,7 @@ begin
 
  -- Instruction pointer
    current_ip<=unsigned(next_ip_i)-1;
-   debug_pc <= current_ip & "00";
+  
 
    epc_o <= std_logic_vector(current_ip_r);
 
@@ -567,13 +567,19 @@ begin
               else
                  not_implemented:='1';
               end if;
+              -- synthesis translate_off
+              if t_valid='1' then
+                debug_optype <= optype;
+                debug_pc <= current_ip & "00";
+              end if; 
+              -- synthesis translate_on
 
              if (t_valid='0' or not_implemented='1') and valid_i='1' then
                -- illegal opcode
                -- synthesis translate_off
                 if jump_valid_i='0' then
-                  report "Illegal opcode encountered "
-                    severity error;
+                  report time'image(now) & ": Illegal opcode encountered"
+                  severity note;
                 end if;
                -- synthesis translate_on
                cmd_jump_o<='1';

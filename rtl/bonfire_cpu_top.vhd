@@ -14,15 +14,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity bonfire_cpu_top is
 generic(
 
@@ -286,6 +277,8 @@ cpu_inst: entity work.bonfire_core_top(rtl)
     wb_ibus_bte_o <= (others=>'0');
     wb_ibus_cti_o <= (others=>'0');
     wb_ibus_stb_o <='0';
+    lli_dat_cache <= (others=>'0');
+    
 
   end generate;
 

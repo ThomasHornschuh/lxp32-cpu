@@ -58,25 +58,25 @@ parameters:
     datatype: str
     default: 'false'
     description: Branch Predictor enable/disable
-    paramtype: vlogparam
+    paramtype: generic
     scope: private
   TestFile:
     datatype: file
     default: ../compiled_code/dhrystone_bram.hex
     description: Initial boot RAM contents (in hex)
-    paramtype: vlogparam
+    paramtype: generic
     scope: private
   USE_ICACHE:
     datatype: str
     default: 'false'
     description: Simulate an instruction cache
-    paramtype: vlogparam
+    paramtype: generic
     scope: private
   signature_file:
     datatype: file
     default: '"signature.log"'
     description: Filename for RISC-V compliance test signature
-    paramtype: vlogparam
+    paramtype: generic
     scope: private
 targets:
   default:

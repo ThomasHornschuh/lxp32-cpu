@@ -85,14 +85,9 @@ signal sig: std_logic;
 signal rmw_mode: std_logic;
 signal adr_reg : std_logic_vector(31 downto 0); -- TH: Lower two bits of address bus
 
-
 signal cyc : std_logic := '0';
---signal local_cyc : std_logic;
---signal dbus_cyc : std_logic;
 
 signal dbus_rdata: txword;
-signal selected_byte: std_logic_vector(7 downto 0);
-
 signal misalign : std_logic;
 
 signal local_adr_en : std_logic; -- 1: processor local address
@@ -300,7 +295,7 @@ end generate;
 
 
 -- TH: New mux coding...
-rdata_mux: process(dbus_rdata,sel,byte_mode,hword_mode,sig,adr_reg)
+rdata_mux: process(dbus_rdata,byte_mode,hword_mode,sig,adr_reg)
 variable byte : std_logic_vector(7 downto 0);
 variable hword : std_logic_vector(15 downto 0);
 begin

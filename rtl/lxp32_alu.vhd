@@ -89,8 +89,8 @@ signal busy: std_logic:='0';
 
 begin
 
-assert MUL_ARCH="dsp" or MUL_ARCH="seq" or MUL_ARCH="opt" or MUL_ARCH="spartandsp"
-	report "Invalid MUL_ARCH generic value: dsp, opt, spartandsp or seq expected"
+assert MUL_ARCH="dsp" or MUL_ARCH="seq" or MUL_ARCH="opt" or MUL_ARCH="spartandsp" or MUL_ARCH="none"
+	report "Invalid MUL_ARCH generic value: dsp, opt, spartandsp, seq or none expected"
 	severity failure;
 
 -- Add/subtract
@@ -182,7 +182,7 @@ gen_mul_dsp: if MUL_ARCH="dsp" generate
 			op2_i=>op2_i,
 			ce_o=>mul_we,
 			result_o=>mul_result_low,
-         result_high_o=>mul_result_high
+            result_high_o=>mul_result_high
 		);
 end generate;
 
@@ -216,6 +216,13 @@ end generate;
 
 mul_result <= mul_result_high when mul_high='1'
               else mul_result_low;
+
+gen_mul_none:  if MUL_ARCH="none" generate
+		
+	mul_result_high <= (others=>'0');
+	mul_result_low <=  (others=>'0');
+	mul_we <= '0';
+end generate;
 
 -- Divider
 
