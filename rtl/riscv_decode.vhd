@@ -166,6 +166,12 @@ signal displacement_out : std_logic_vector(displacement_o'range);
 
 signal optype, debug_optype : t_riscv_op;
 
+-- uncomment for debugging Synplify Pro
+-- attribute syn_keep of debug_pc : signal is true;
+-- attribute syn_keep of word_i : signal is true;
+-- attribute syn_keep of opcode : signal is true;
+-- attribute syn_keep of cmd_trap_o : signal is true;
+
 begin
 
  -- extract instruction fields
@@ -273,9 +279,9 @@ begin
                cmd_loadop3_o<='0';
                cmd_signed_o<='0';
                cmd_dbus_o<='0';
-               cmd_dbus_store_o<='-';
-               cmd_dbus_byte_o<='-';
-               cmd_dbus_hword_o<='-'; -- TH
+               cmd_dbus_store_o<='0';
+               cmd_dbus_byte_o<='0';
+               cmd_dbus_hword_o<='0'; -- TH
                cmd_addsub_o<='0';
                cmd_negate_op2_o<='0';
                cmd_mul_o<='0';
@@ -402,14 +408,18 @@ begin
                          if not BRANCH_PREDICTOR then
                            rd1_select<=Imm;
                            rd1_direct<=std_logic_vector(signed(current_ip&"00"));
-                           displacement:= fill_in(get_UJ_immediate(word_i),displacement'length);
+                           --displacement:= fill_in(get_UJ_immediate(word_i),displacement'length);
+                           -- Workaround for Lattice Diamond bug
+                           displacement:= get_UJ_immediate(word_i) & '0';
                            cmd_jump_o<='1';
                            jump_misalign_o <= jma_check;
                          else -- with Branch Predictor
                             -- A jal is always predicted right. So no need to trigger
                             -- the jump logic in the execution stage exepct when
                             -- there is a misalinged jump
-                            displacement:= fill_in(get_UJ_immediate(word_i),displacement'length);
+                            --displacement:= fill_in(get_UJ_immediate(word_i),displacement'length);
+                            -- Workaround for Lattice Diamond bug
+                            displacement:= get_UJ_immediate(word_i) & '0';
                             if displacement(1)='1' then
                               -- synthesis translate_off
                               report "decode: Misaligned JAL instruction detected" severity warning;
@@ -440,8 +450,9 @@ begin
 
                      when rv_branch =>
 
-                         displacement:=fill_in(get_SB_immediate(word_i),displacement'length);
-                         --branch_target:=std_logic_vector(signed(current_ip&"00")+get_SB_immediate(word_i));
+                         --displacement:=fill_in(get_SB_immediate(word_i),displacement'length);
+                         -- Workaround for Lattice Diamond bug
+                         displacement:=  std_logic_vector(resize(signed(get_SB_immediate(word_i) & "0"),displacement'length));                        
                          rd1_select<=Reg;
                          rd2_select<=Reg;
                          jump_type_o<="0"&funct3; -- "reuse" lxp jump_type for the funct3 field, see generated coding in lxp32_execute
