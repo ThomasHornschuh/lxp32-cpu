@@ -79,6 +79,7 @@ function decode_op(signal opcode : in t_opcode) return t_riscv_op;
 
 -- "Fills" an input vector into an output vector of range (len-1 downto 0)
 function fill_in(x: std_logic_vector; len:natural) return std_logic_vector;
+function resize_to_displacement21(x: std_logic_vector) return t_displacement21;
 
 end riscv_decodeutil;
 
@@ -157,6 +158,11 @@ begin
     temp(i) := x(x'high);
   end loop;
   return temp;
+end;
+
+function resize_to_displacement21(x: std_logic_vector) return t_displacement21 is
+begin  
+    return std_logic_vector(resize(signed(x),t_displacement21'length));
 end;
 
 function decode_op(signal opcode : in t_opcode) return t_riscv_op is

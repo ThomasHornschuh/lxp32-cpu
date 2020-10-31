@@ -16,16 +16,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
 use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 
 use work.riscv_decodeutil.all;
 
@@ -195,7 +186,7 @@ begin
 
  -- Instruction pointer
    current_ip<=unsigned(next_ip_i)-1;
-  
+
 
    epc_o <= std_logic_vector(current_ip_r);
 
@@ -445,14 +436,12 @@ begin
                          cmd_loadop3_o<='1';
                          op3_o<=next_ip_i&"00";
                          dst_out<="000"&rd;
-                         displacement:= fill_in(get_I_displacement(word_i),displacement'length);
+                         displacement:= resize_to_displacement21(get_I_displacement(word_i));
                          t_valid:='1';
 
                      when rv_branch =>
-
-                         --displacement:=fill_in(get_SB_immediate(word_i),displacement'length);
                          -- Workaround for Lattice Diamond bug
-                         displacement:=  std_logic_vector(resize(signed(get_SB_immediate(word_i) & "0"),displacement'length));                        
+                         displacement:= resize_to_displacement21(get_SB_immediate(word_i) & "0");
                          rd1_select<=Reg;
                          rd2_select<=Reg;
                          jump_type_o<="0"&funct3; -- "reuse" lxp jump_type for the funct3 field, see generated coding in lxp32_execute
@@ -466,7 +455,7 @@ begin
                      when rv_load =>
 
                          rd1_select<=Reg;
-                         displacement:=fill_in(get_I_displacement(word_i),displacement'length);
+                         displacement:=resize_to_displacement21(get_I_displacement(word_i));
                          cmd_dbus_o<='1';
                          cmd_dbus_store_o<='0';
                          dst_out<="000"&rd;
@@ -483,7 +472,7 @@ begin
                     when rv_store =>
 
                          rd1_select<=Reg;
-                         displacement:=fill_in(get_S_displacement(word_i),displacement'length);
+                         displacement:=resize_to_displacement21(get_S_displacement(word_i));
                          rd2_select<=Reg;
                          cmd_dbus_o<='1';
                          cmd_dbus_store_o<='1';
@@ -565,7 +554,7 @@ begin
                           rd1_select<=Imm;
                           rd1_direct<=std_logic_vector(signed(next_ip_i&"00"));
                           cmd_jump_o<='1';
-                          fencei_o<=valid_i; -- Only set fence when opcode is really valid 
+                          fencei_o<=valid_i; -- Only set fence when opcode is really valid
                           t_valid:='1';
                         when others =>
                           not_implemented:='1';
@@ -582,7 +571,7 @@ begin
               if t_valid='1' then
                 debug_optype <= optype;
                 debug_pc <= current_ip & "00";
-              end if; 
+              end if;
               -- synthesis translate_on
 
              if (t_valid='0' or not_implemented='1') and valid_i='1' then
