@@ -127,11 +127,11 @@ begin
       if rst_i='1' then
          we_out<='0';
          strobe<='0';
-         sig<='-';
-         byte_mode<='-';
+         sig<='0';
+         byte_mode<='0';
          sel<=(others=>'-');
          we<='0';
-         rmw_mode<='-';
+         rmw_mode<='0';
          adr_reg<=(others=>'-');
          dbus_dat_o<=(others=>'-');
          misalign<='0';

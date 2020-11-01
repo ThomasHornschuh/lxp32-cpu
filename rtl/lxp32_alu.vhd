@@ -87,10 +87,12 @@ signal result_we: std_logic;
 
 signal busy: std_logic:='0';
 
+
+
 begin
 
-assert MUL_ARCH="dsp" or MUL_ARCH="seq" or MUL_ARCH="opt" or MUL_ARCH="spartandsp" or MUL_ARCH="none"
-	report "Invalid MUL_ARCH generic value: dsp, opt, spartandsp, seq or none expected"
+assert MUL_ARCH="dsp" or MUL_ARCH="seq" or MUL_ARCH="opt" or MUL_ARCH="spartandsp" or MUL_ARCH="none" or MUL_ARCH="ecp5dsp"
+	report "Invalid MUL_ARCH generic value: dsp, opt, spartandsp, seq, ecp5dsp or none expected"
 	severity failure;
 
 -- Add/subtract
@@ -154,6 +156,22 @@ end process;
 
 gen_mul_spartandsp: if MUL_ARCH="spartandsp" generate
    mul_inst: entity work.riscv_mulsp6(rtl)
+      port map(
+         clk_i=>clk_i,
+         rst_i=>rst_i,
+         ce_i=>mul_ce,
+         op1_i=>op1_i,
+         op2_i=>op2_i,
+         op1_signed_i=>cmd_signed_i, 
+         op2_signed_i=>cmd_signed_b_i,
+         ce_o=>mul_we,
+         result_o=>mul_result_low,
+         result_high_o=>mul_result_high
+      );
+end generate;
+
+gen_mul_ecp5: if MUL_ARCH="ecp5dsp" generate
+   mul_inst: entity work.bonfire_mulecp5(rtl)
       port map(
          clk_i=>clk_i,
          rst_i=>rst_i,

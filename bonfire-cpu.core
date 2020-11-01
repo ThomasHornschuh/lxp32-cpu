@@ -25,6 +25,7 @@ filesets:
     - rtl/lxp32_mul_seq.vhd
     - rtl/lxp32_divider.vhd
     - rtl/riscv_mulsp6.vhd
+    - rtl/bonfire_mulecp5.vhd
     - rtl/lxp32_alu.vhd
     - rtl/lxp32_dbus.vhd
     - rtl/riscv_local_memmap.vhd
@@ -108,3 +109,5 @@ targets:
     - signature_file
     - BRANCH_PREDICTOR
     - USE_ICACHE
+
+ 

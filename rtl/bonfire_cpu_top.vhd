@@ -19,7 +19,7 @@ generic(
 
       M_EXTENSION: boolean:=true;
       START_ADDR: std_logic_vector(29 downto 0):=(others=>'0');
-
+      DEVICE_FAMILY : string :="";
       REG_RAM_STYLE : string := "block";
       CACHE_SIZE_WORDS : natural := 2048;
       CACHE_LINE_SIZE_WORDS : natural := 8;
@@ -209,12 +209,13 @@ wb_dbus_dat_o <= dbus_dat_o;
 
 cpu_inst: entity work.bonfire_core_top(rtl)
    generic map(
-      M_EXTENSION=>M_EXTENSION,
-      START_ADDR=>START_ADDR,
-      REG_RAM_STYLE=>REG_RAM_STYLE,
-      ENABLE_TIMER=>ENABLE_TIMER,
-      TIMER_XLEN=>TIMER_XLEN,
-      BRANCH_PREDICTOR=>BRANCH_PREDICTOR
+      M_EXTENSION     =>M_EXTENSION,
+      START_ADDR      =>START_ADDR,
+      REG_RAM_STYLE   =>REG_RAM_STYLE,
+      ENABLE_TIMER    =>ENABLE_TIMER,
+      TIMER_XLEN      =>TIMER_XLEN,
+      BRANCH_PREDICTOR=>BRANCH_PREDICTOR,
+      DEVICE_FAMILY   =>DEVICE_FAMILY
    )
    port map(
       clk_i=>clk_i,

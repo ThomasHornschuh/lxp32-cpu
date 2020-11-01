@@ -10,6 +10,7 @@
 --
 -- Parameters:
 --     M_EXTENSION:        Enable RISC-V M Extension (requires FPGAs with Mutipliers)
+--     DEVICE_FAMILY       Adapts design to specifc FPGA families. Currently only "ECP5" has an effect.
 --     START_ADDR:         address in program memory where execution
 --                         starts
 --     REG_RAM_STYLE       Xilinx only: "block" or "distributed". Defines how the
@@ -28,7 +29,8 @@ entity bonfire_core_top is
         REG_RAM_STYLE : string := "block";
         BRANCH_PREDICTOR : boolean := false;
         ENABLE_TIMER : boolean := true;
-        TIMER_XLEN : natural := 32
+        TIMER_XLEN : natural := 32;
+        DEVICE_FAMILY : string := ""
     );
     port(
         clk_i: in std_logic;
@@ -58,7 +60,11 @@ architecture rtl of bonfire_core_top is
 function g_mul_arch(enable: boolean ) return string is
 begin
   if enable then
-    return "spartandsp";
+    if DEVICE_FAMILY="ECP5" then
+      return "ecp5dsp";
+    else  
+      return "spartandsp";
+    end if;  
   else
     return "none";
   end if;
