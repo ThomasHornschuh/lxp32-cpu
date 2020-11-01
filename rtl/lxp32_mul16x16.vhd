@@ -35,16 +35,16 @@ begin
 
 mul16_piplined : if pipelined generate
 
-  prod <= std_logic_vector(unsigned(a)*unsigned(b));  
-  p_o <= prod_reg;
+	prod <= std_logic_vector(unsigned(a)*unsigned(b));  
+	p_o <= prod_reg;
 
-process (clk_i) is
-begin
-	if rising_edge(clk_i) then
-	  a <= a_i;
-     b <= b_i;	
-     prod_reg <= prod; 
-	end if;
+	process (clk_i) is
+	begin
+		if rising_edge(clk_i) then
+			 a <= a_i;
+		     b <= b_i;	
+		     prod_reg <= prod; 
+		end if;
    
 end process;
 

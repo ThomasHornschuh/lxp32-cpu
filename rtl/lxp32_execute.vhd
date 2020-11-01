@@ -230,7 +230,7 @@ signal sim_mispredict_counter   : natural := 0;
 
 begin
 
-assert (USE_RISCV and (MUL_ARCH="spartandsp" or MUL_ARCH="none"))
+assert (USE_RISCV and (MUL_ARCH="spartandsp" or MUL_ARCH="none" or MUL_ARCH="ecp5dsp"))
        or not USE_RISCV
 
   report "With RISC-V currently only MUL_ARCH spartandsp or none is supported"

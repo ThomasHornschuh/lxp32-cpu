@@ -1,0 +1,27 @@
+CAPI=2:
+name: ::bonfire-multest:0  
+filesets:
+  rtl:
+    depend:
+    - ::bonfire-util:0
+    file_type: vhdlSource
+    files:
+       - rtl/riscv_mulsp6.vhd
+       - ut/tb_riscv_mulsp6.vhd
+
+targets:
+    sim:
+      filesets: [ rtl ]
+      default_tool: ghdl
+
+      toplevel: tb_riscv_mulsp6
+      tools:
+        ghdl:
+            analyze_options: [--ieee=synopsys ]
+            run_options: [ --ieee-asserts=disable, --max-stack-alloc=0 ,  --wave=ut_mult.ghw,--stop-time=2000ns ]
+        xsim:
+            xelab_options: [ "--debug typical" ]
+
+
+
+
